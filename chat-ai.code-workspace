@@ -1,0 +1,39 @@
+{
+    "folders": [
+      {
+        "path": "."
+      }
+    ],
+    "settings": {
+      "editor.fontSize": 14,
+      "terminal.integrated.fontSize": 14,
+      "editor.formatOnSave": false,
+      "editor.lineHeight": 18,
+      "files.eol": "\n",
+      "files.insertFinalNewline": true,
+      "files.trimFinalNewlines": true,
+      "editor.tabSize": 2,
+      "editor.insertSpaces": true, // Alterado para true
+      "editor.detectIndentation": false,
+      "editor.rulers": [80, 180],
+      "javascript.updateImportsOnFileMove.enabled": "always",
+      "typescript.updateImportsOnFileMove.enabled": "always",
+      "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+      ],
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.stylelint": "never"
+      },
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+      "eslint.format.enable": true,
+      "eslint.enable": true,
+      "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+      }
+    }
+  }
+  
