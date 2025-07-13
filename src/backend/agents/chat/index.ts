@@ -95,13 +95,13 @@ Essa lista **será processada por um Structured Output Parser**, portanto:
 * Estruture suas respostas com clareza, pois elas serão processadas por uma tool externa
 `;
 
-export const chatBrainSchema = z.object({
+export const chatAgentSchema = z.object({
   tasks_approved: z.boolean(),
   tasks: z.array(z.string()).optional(),
   agent_message: z.string()
 });
 
-export const chatBrainAgent = () => {
+export const chatAgent = () => {
   return {
     execute: async ({ messages, data }: ChatDTO): Promise<ChatResponse> => {
         const initialMessages = messages.slice(0, -1);
@@ -116,10 +116,16 @@ export const chatBrainAgent = () => {
             ...aiUtils.convertToCoreMessages(initialMessages),
             { role: 'user', content: messageContent },
           ],
-          schema: chatBrainSchema,
+          schema: chatAgentSchema,
         });
 
-        return response;
+        return {
+          ...response,
+          tasks: response.tasks?.map(task => ({
+            title: task?.trim(),
+            description: ''
+          })) || []
+        };
     }
   }
 }

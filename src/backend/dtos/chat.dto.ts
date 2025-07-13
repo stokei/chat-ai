@@ -7,8 +7,13 @@ export interface ChatDTO {
   };
 }
 
+interface Task {
+  title: string;
+  description: string;
+}
+
 export interface ChatResponse {
   tasks_approved: boolean;
-  tasks?: string[];
+  tasks?: Task[];
   agent_message: string;
 }

@@ -1,19 +1,28 @@
 "use client"
 
-import { chatBrainSchema } from '@/backend/agents/chat/brain';
 import { backendRoutes } from '@/backend/constants/routes';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from '@/components/ui/textarea';
 import { experimental_useObject as useObject } from '@ai-sdk/react';
 import { useState } from 'react';
+import { z } from 'zod';
+
+const chatAgentSchema = z.object({
+  tasks_approved: z.boolean(),
+  tasks: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+  })).optional(),
+  agent_message: z.string()
+});
 
 export function Chat() {
   const [messages, setMessages] = useState<{ id: string; role: string; content: string; }[]>([]);
 
   const { submit, isLoading } = useObject({
     api: backendRoutes.CHAT,
-    schema: chatBrainSchema,
+    schema: chatAgentSchema,
     onFinish(event) {
       const newMessage = {
         id: Date.now()+'',
