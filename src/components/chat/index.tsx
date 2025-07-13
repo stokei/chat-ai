@@ -1,13 +1,27 @@
 "use client"
 
+import { chatBrainSchema } from '@/backend/agents/chat/brain';
+import { backendRoutes } from '@/backend/constants/routes';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from '@/components/ui/textarea';
-import { useChat } from 'ai/react';
+import { experimental_useObject as useObject } from '@ai-sdk/react';
+import { useState } from 'react';
 
 export function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: '/api/chat',
+  const [messages, setMessages] = useState<{ id: string; role: string; content: string; }[]>([]);
+
+  const { submit, isLoading } = useObject({
+    api: backendRoutes.CHAT,
+    schema: chatBrainSchema,
+    onFinish(event) {
+      const newMessage = {
+        id: Date.now()+'',
+        role: 'assistant',
+        content: event?.object?.agent_message || '',
+      };
+      setMessages(prev => [...prev, newMessage]);
+    },
   });
 
   return (
@@ -34,12 +48,18 @@ export function Chat() {
       <CardFooter>
         <form
           className="w-full flex flex-row items-center justify-center gap-4"
-          onSubmit={handleSubmit}
+          onSubmit={e => {
+            e.preventDefault();
+            const content = e.currentTarget.content.value.trim();
+            if (!content) return;
+            submit({
+              messages: [...messages, { id: Date.now()+'', role: 'user', content }],
+            });
+          }}
         >
           <Textarea
-            placeholder="shadcn"
-            value={input}
-            onChange={handleInputChange}
+            name="content"
+            placeholder="Escreva sua mensagem..."
           />
           <Button type="submit" isLoading={isLoading}>Submit</Button>
         </form>
